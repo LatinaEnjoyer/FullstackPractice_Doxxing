@@ -20,11 +20,11 @@ public class Person {
     private LocalDate birthday;
     private String gender;
 
-    private Long registrationNumber;
+    private String registrationNumber;
 
     public Person() {}
 
-    public Person(String firstName, String lastName, Long age, LocalDate birthday, String gender, Long registrationNumber) {
+    public Person(String firstName, String lastName, Long age, LocalDate birthday, String gender, String registrationNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;

@@ -3,7 +3,6 @@ package com.thukuna.fullstackpractice.person;
 import com.thukuna.fullstackpractice.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

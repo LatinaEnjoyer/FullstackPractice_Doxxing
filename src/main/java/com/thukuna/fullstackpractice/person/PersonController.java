@@ -16,7 +16,7 @@ public class PersonController {
         this.personService = personService;
     }
 
-    @GetMapping
+    @GetMapping("/get-all")
     public ResponseEntity<List<PersonDTO>> getAllPeople() {
         return ResponseEntity.ok(personService.getAllPeople());
     }
