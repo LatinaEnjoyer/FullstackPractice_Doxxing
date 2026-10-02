@@ -4,9 +4,19 @@ import { addPerson, fetchPersonList, deletePersonFromDatabase } from "./scriptAP
 
 const table = document.querySelector(".person-list");
 const activityText = document.querySelector(".activity-text");
+const addPersonBtn = document.querySelector("#add-person-btn")
+const popupContainer = document.querySelector(".popup-container");
 
 async function initApp() {
     document.querySelector(".popup-add-form").addEventListener("submit", handleAddPersonFormSubmit)
+    addPersonBtn.addEventListener("click", () => {
+        popupContainer.classList.toggle("hidden");
+    });
+    popupContainer.addEventListener("click", (event) => {
+        if (event.target === popupContainer) {
+            popupContainer.classList.toggle("hidden");
+        }
+    })
     table.addEventListener("click", handleTableClick);
 
     const personList = await fetchPersonList();
@@ -81,7 +91,9 @@ async function handleAddPersonFormSubmit(event) {
 
 function activityTextMessage(message) {
     activityText.textContent = message;
+    activityText.classList.toggle("hidden");
     setTimeout(() => {
         activityText.textContent = "";
+        activityText.classList.toggle("hidden");
     }, 5000);
 }

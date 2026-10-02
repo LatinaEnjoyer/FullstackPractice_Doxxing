@@ -1,0 +1,28 @@
+.popup-container {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(0,0,0,0.5);
+}
+
+.popup-add-form {
+    border-radius: 1em;
+    border: 1px solid black;
+    background: white;
+
+    gap: 1em;
+    padding: 1em;
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+.hidden {
+    display: none !important;
+}

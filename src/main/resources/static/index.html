@@ -3,11 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Front Page</title>
+    <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
 
-<table class="person-list">
+<button id="add-person-btn">Add new person to database</button>
 
+<table>
+    <thead>
+        <tr>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Age</th>
+            <th>Birthday</th>
+            <th>Gender</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody class="person-list">
+
+    </tbody>
 </table>
 
 <div class="popup-container hidden">
@@ -25,9 +40,9 @@
             <option value="Female">Female</option>
             <option value="Confused">Other</option>
         </select>
-        <label for="registration-number"></label>
+        <label for="registration-number">Registration number:</label>
         <input required type="text" id="registration-number" name="registration-number" placeholder="Between 6 and 8 digits">
-        <button type="submit" id="add-person-submit-btn">Add new person to database</button>
+        <button type="submit">Add new person to database</button>
     </form>
 </div>
 
