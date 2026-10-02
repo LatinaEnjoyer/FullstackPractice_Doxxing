@@ -5,9 +5,32 @@
     <title>Front Page</title>
 </head>
 <body>
+
 <table class="person-list">
 
 </table>
-<script src="script.js"></script>
+
+<div class="popup-container hidden">
+    <form class="popup-add-form">
+        <p class="activity-text hidden"></p>
+        <label for="first-name">First name:</label>
+        <input required type="text" id="first-name" name="first-name">
+        <label for="last-name">Last name:</label>
+        <input required type="text" id="last-name" name="last-name">
+        <label for="date">Birthday:</label>
+        <input required type="date" id="date" name="date">
+        <label for="gender">Gender:</label>
+        <select required name="gender" id="gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Confused">Other</option>
+        </select>
+        <label for="registration-number"></label>
+        <input required type="text" id="registration-number" name="registration-number" placeholder="Between 6 and 8 digits">
+        <button type="submit" id="add-person-submit-btn">Add new person to database</button>
+    </form>
+</div>
+
+<script type="module" src="script.js"></script>
 </body>
 </html>

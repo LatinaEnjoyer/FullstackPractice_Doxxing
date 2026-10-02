@@ -1,21 +1,19 @@
 document.addEventListener("DOMContentLoaded", initApp);
 
-const BASE_URL = "http://localhost:8080";
+import { addPerson, fetchPersonList, deletePersonFromDatabase } from "./scriptAPI.js";
 
 const table = document.querySelector(".person-list");
+const activityText = document.querySelector(".activity-text");
 
 async function initApp() {
+    document.querySelector(".popup-add-form").addEventListener("submit", handleAddPersonFormSubmit)
+    table.addEventListener("click", handleTableClick);
+
     const personList = await fetchPersonList();
-    displayPeople(personList);
+    displayPersonList(personList);
 }
 
-
-async function fetchPersonList() {
-    const response = await fetch(`${BASE_URL}/api/get-all`);
-    return await response.json();
-}
-
-function displayPeople(personList) {
+function displayPersonList(personList) {
     table.innerHTML = "";
     personList.forEach(person => {
         renderPersonInformation(person)
@@ -37,4 +35,53 @@ function renderPersonInformation(person) {
         </td>
     `;
     table.appendChild(row);
+}
+
+async function handleTableClick(event) {
+    const action = event.target.getAttribute("data-action");
+    const row = event.target.closest("tr");
+    const id = row.getAttribute("data-id");
+    if (action === "delete") {
+        const confirmed = confirm("Are you sure you want to remove this person")
+
+        if (!confirmed) {
+            return;
+        }
+
+        const success = await deletePersonFromDatabase(id);
+        if (success) {
+            row.remove();
+        }
+    } else if (action === "edit") {
+        console.log("edit clicked");
+    }
+}
+
+async function handleAddPersonFormSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const firstName = formData.get("first-name");
+    const lastName = formData.get("last-name");
+    const birthday = formData.get("date");
+    const gender = formData.get("gender");
+    const registrationNumber = formData.get("registration-number");
+    const personData = {firstName, lastName, birthday, gender, registrationNumber}
+
+    try {
+        const newPerson = await addPerson(personData);
+
+        renderPersonInformation(newPerson);
+        event.target.reset();
+
+        activityTextMessage(`${firstName} ${lastName} added to database`)
+    } catch (e) {
+        activityTextMessage(e.message)
+    }
+}
+
+function activityTextMessage(message) {
+    activityText.textContent = message;
+    setTimeout(() => {
+        activityText.textContent = "";
+    }, 5000);
 }

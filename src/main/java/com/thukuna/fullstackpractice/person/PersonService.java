@@ -3,6 +3,8 @@ package com.thukuna.fullstackpractice.person;
 import com.thukuna.fullstackpractice.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 @Service
@@ -38,12 +40,20 @@ public class PersonService {
         Person newPerson = new Person(
                 requestDTO.firstName(),
                 requestDTO.lastName(),
-                requestDTO.age(),
                 requestDTO.birthday(),
                 requestDTO.gender(),
                 requestDTO.registrationNumber()
         );
         personRepository.save(newPerson);
         return PersonMapper.toPersonDTO(newPerson);
+    }
+
+    public void deletePerson(Long id) {
+        if (!personRepository.existsById(id)) {
+            throw new NotFoundException(
+                    "Perosn not found with id: " + id
+            );
+        }
+        personRepository.deleteById(id);
     }
 }

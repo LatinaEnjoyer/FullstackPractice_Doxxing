@@ -12,13 +12,11 @@ public record PersonRequestDTO(
         @NotBlank
         String lastName,
         @NotNull
-        Long age,
-        @NotNull
         LocalDate birthday,
         @NotBlank
         String gender,
         @NotBlank
-        @Pattern(regexp = "\\d{8}")
+        @Pattern(regexp = "^\\d{6,8}$")
         String registrationNumber
 ) {
 }

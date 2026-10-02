@@ -30,4 +30,10 @@ public class PersonController {
     public ResponseEntity<PersonDTO> addPerson(@Valid @RequestBody PersonRequestDTO requestDTO) {
         return ResponseEntity.ok(personService.addPerson(requestDTO));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePerson(@PathVariable Long id) {
+        personService.deletePerson(id);
+        return ResponseEntity.noContent().build();
+    }
 }

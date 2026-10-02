@@ -16,7 +16,6 @@ public class Person {
     private String firstName;
     private String lastName;
 
-    private Long age;
     private LocalDate birthday;
     private String gender;
 
@@ -24,10 +23,10 @@ public class Person {
 
     public Person() {}
 
-    public Person(String firstName, String lastName, Long age, LocalDate birthday, String gender, String registrationNumber) {
+    public Person(String firstName, String lastName, LocalDate birthday, String gender, String registrationNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.age = age;
+
         this.birthday = birthday;
         this.gender = gender;
         this.registrationNumber = registrationNumber;
@@ -55,14 +54,6 @@ public class Person {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public Long getAge() {
-        return age;
-    }
-
-    public void setAge(Long age) {
-        this.age = age;
     }
 
     public LocalDate getBirthday() {
