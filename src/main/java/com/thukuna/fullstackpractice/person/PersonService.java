@@ -56,4 +56,19 @@ public class PersonService {
         }
         personRepository.deleteById(id);
     }
+
+    public PersonDTO editPersonById(Long id, PersonRequestDTO requestDTO) {
+        Person person = personRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(
+                        "Person with id " + id + " not found!"));
+
+        person.setFirstName(requestDTO.firstName());
+        person.setLastName(requestDTO.lastName());
+        person.setBirthday(requestDTO.birthday());
+        person.setGender(requestDTO.gender());
+
+        personRepository.save(person);
+
+        return PersonMapper.toPersonDTO(person);
+    }
 }

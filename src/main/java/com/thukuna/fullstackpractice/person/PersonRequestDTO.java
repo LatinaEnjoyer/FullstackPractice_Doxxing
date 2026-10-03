@@ -15,7 +15,6 @@ public record PersonRequestDTO(
         LocalDate birthday,
         @NotBlank
         String gender,
-        @NotBlank
         @Pattern(regexp = "^\\d{6,8}$")
         String registrationNumber
 ) {

@@ -36,4 +36,9 @@ public class PersonController {
         personService.deletePerson(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PersonDTO> addPersonById(@PathVariable Long id, @Valid @RequestBody PersonRequestDTO person) {
+        return ResponseEntity.ok(personService.editPersonById(id, person));
+    }
 }

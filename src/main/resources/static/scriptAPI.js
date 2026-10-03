@@ -28,3 +28,31 @@ export async function deletePersonFromDatabase(id) {
     })
     return response.ok;
 }
+
+export async function getPersonById(id) {
+    const response = await fetch(`${BASE_URL}/api/${id}`);
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail);
+    }
+
+    return await response.json();
+}
+
+export async function editPersonById(id, person) {
+    const response = await fetch(`${BASE_URL}/api/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(person)
+    })
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail);
+    }
+
+    return await response.json();
+}

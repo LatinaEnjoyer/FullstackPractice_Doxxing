@@ -1,20 +1,33 @@
 document.addEventListener("DOMContentLoaded", initApp);
 
-import { addPerson, fetchPersonList, deletePersonFromDatabase } from "./scriptAPI.js";
+import {addPerson, fetchPersonList, deletePersonFromDatabase, getPersonById, editPersonById} from "./scriptAPI.js";
 
 const table = document.querySelector(".person-list");
 const activityText = document.querySelector(".activity-text");
 const addPersonBtn = document.querySelector("#add-person-btn")
 const popupContainer = document.querySelector(".popup-container");
+const popupForm = document.querySelector(".popup-form");
+const h3Form = document.querySelector("#h3-form");
+
+// form data
+const firstNameInput = document.querySelector("#first-name");
+const lastNameInput = document.querySelector("#last-name");
+const birthdayInput = document.querySelector("#date");
+const genderInput = document.querySelector("#gender");
+const registrationNumberInput = document.querySelector("#registration-number");
+const registrationNumberBox = document.querySelector("#registration-number-box");
 
 async function initApp() {
-    document.querySelector(".popup-add-form").addEventListener("submit", handleAddPersonFormSubmit)
+    popupForm.addEventListener("submit", handleFormSubmit)
+
     addPersonBtn.addEventListener("click", () => {
-        popupContainer.classList.toggle("hidden");
+        resetPopup();
+        popupContainer.classList.remove("hidden");
     });
     popupContainer.addEventListener("click", (event) => {
         if (event.target === popupContainer) {
-            popupContainer.classList.toggle("hidden");
+            resetPopup();
+            popupContainer.classList.add("hidden");
         }
     })
     table.addEventListener("click", handleTableClick);
@@ -47,6 +60,16 @@ function renderPersonInformation(person) {
     table.appendChild(row);
 }
 
+function renderUpdatedPersonInformation(person) {
+    const row = table.querySelector(`tr[data-id="${person.id}"]`);
+
+    row.children[0].textContent = person.firstName;
+    row.children[1].textContent = person.lastName;
+    row.children[2].textContent = person.age;
+    row.children[3].textContent = person.birthday;
+    row.children[4].textContent = person.gender;
+}
+
 async function handleTableClick(event) {
     const action = event.target.getAttribute("data-action");
     const row = event.target.closest("tr");
@@ -63,37 +86,86 @@ async function handleTableClick(event) {
             row.remove();
         }
     } else if (action === "edit") {
-        console.log("edit clicked");
+        await showEditForm(id);
     }
 }
 
-async function handleAddPersonFormSubmit(event) {
+async function showEditForm(id) {
+    h3Form.textContent = "Edit person in the database";
+    popupForm.setAttribute("data-action", "edit");
+    popupForm.setAttribute("data-id", id);
+
+    registrationNumberInput.required = false;
+    registrationNumberBox.classList.add("hidden");
+
+    try {
+        const person = await getPersonById(id);
+
+        firstNameInput.value = person.firstName;
+        lastNameInput.value = person.lastName;
+        birthdayInput.value = person.birthday;
+        genderInput.value = person.gender;
+
+        popupContainer.classList.remove("hidden");
+    } catch (e) {
+        console.log("something went wrong in showeditform");
+    }
+}
+
+async function handleFormSubmit(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
     const firstName = formData.get("first-name");
     const lastName = formData.get("last-name");
     const birthday = formData.get("date");
     const gender = formData.get("gender");
-    const registrationNumber = formData.get("registration-number");
-    const personData = {firstName, lastName, birthday, gender, registrationNumber}
 
-    try {
-        const newPerson = await addPerson(personData);
+    const formType = popupForm.getAttribute("data-action")
+    if (formType === "create") {
+        const registrationNumber = formData.get("registration-number");
+        const personData = {firstName, lastName, birthday, gender, registrationNumber}
 
-        renderPersonInformation(newPerson);
-        event.target.reset();
+        try {
+            const newPerson = await addPerson(personData);
 
-        activityTextMessage(`${firstName} ${lastName} added to database`)
-    } catch (e) {
-        activityTextMessage(e.message)
+            renderPersonInformation(newPerson);
+            event.target.reset();
+
+            popupContainer.classList.add("hidden");
+        } catch (e) {
+            activityTextMessage(e.message)
+        }
+    } else if (formType === "edit") {
+        const personData = {firstName, lastName, birthday, gender}
+        const id = popupForm.getAttribute("data-id");
+
+        try {
+            const editedperson = await editPersonById(id, personData);
+
+            renderUpdatedPersonInformation(editedperson);
+
+            popupContainer.classList.add("hidden");
+            resetPopup();
+        } catch (e) {
+            activityTextMessage(e.message);
+        }
     }
+
 }
 
 function activityTextMessage(message) {
     activityText.textContent = message;
-    activityText.classList.toggle("hidden");
+    activityText.classList.remove("hidden");
     setTimeout(() => {
         activityText.textContent = "";
-        activityText.classList.toggle("hidden");
+        activityText.classList.add("hidden");
     }, 5000);
+}
+
+function resetPopup() {
+    popupForm.reset();
+    h3Form.textContent = "Add person to the database"
+    popupForm.setAttribute("data-action", "create");
+    registrationNumberInput.required = true;
+    registrationNumberBox.classList.remove("hidden");
 }
